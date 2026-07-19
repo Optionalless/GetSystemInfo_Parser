@@ -77,6 +77,11 @@ class GetSystemInfoParser:
                 self.parse_open_ports(txt)
                 continue
 
+            if line == "<NTLogEvent>":
+                print(line)
+                self.parse_event_logs(txt, line[1:-1])
+                continue
+
         if net_diag is not None:
             self.result["net_diag"] = ""
             net_diag = iter(net_diag)
@@ -96,7 +101,7 @@ class GetSystemInfoParser:
  ██      ██ ███████ ███████     ██   ████  ██████     ██        ██       ██████   ██████  ██   ████ ██████  
 [/]"""
 
-        print(f"{self.result["OpenPorts"]}")
+        print(f"{self.result["NTLogEvent"]}")
         return self.result
 
     def parse_single_block(self, txt, current_block_name):
@@ -292,6 +297,29 @@ class GetSystemInfoParser:
                 else:
                     self.result[current_block_name] = self.result[current_block_name] + "\n" + line
 
+    def parse_event_logs(self, txt, current_block_name: str):
+        self.result[current_block_name] = []
+        for line in txt:
+            line = line.decode("utf-8").rstrip("\r\n").strip()
+            if line.startswith("</"):
+                return
+            if "Category[:]" in line:
+                self.result[current_block_name].append({
+                    "Category": line.split("[:]")[-1],
+                    "CategoryString": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Event_code": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "EventIdentifier": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "EventType": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Log_file": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Message": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "RecordNumber": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Source_name": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Time": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "TimeWritten": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Type": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "User": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                })
+
     @staticmethod
     def open_gsi5txt_inside_gsi6zip(gsi6_file_name: str) -> tuple[list[bytes], Any] | list[bytes]:
         r"""
@@ -358,6 +386,6 @@ class GetSystemInfoParser:
 if __name__ == "__main__":
     bigc = GetSystemInfoParser()
     reports_list = bigc.get_reports()
-    txt, net_diag = bigc.get_information_from_gsi(reports_list[3])
+    txt, net_diag = bigc.get_information_from_gsi(reports_list[4])
     bigc.main_reading_thread(txt, net_diag)
     print(f"\n\n{reports_list}")
