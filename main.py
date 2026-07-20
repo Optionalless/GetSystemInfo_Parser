@@ -2,6 +2,7 @@ from typing import Any
 from zipfile import ZipFile
 from pathlib import Path
 from io import BytesIO
+from dissect.eventlog.evtx import Evtx
 
 
 class GetSystemInfoParser:
@@ -23,7 +24,8 @@ class GetSystemInfoParser:
                 gsi6reports.append(file_path.name)
         return gsi6reports
 
-    def main_reading_thread(self, txt: list, net_diag=None):
+    def main_reading_thread(self, txt: list, net_diag=None, evt_kel=None, evt_sys=None, evt_app=None):
+        gsi5_correct_flag = False
         if txt == "Unknown":
             return "Unknown"
         txt = iter(txt)
@@ -78,9 +80,16 @@ class GetSystemInfoParser:
                 continue
 
             if line == "<NTLogEvent>":
-                print(line)
                 self.parse_event_logs(txt, line[1:-1])
                 continue
+
+            if "<MD5>" in line:
+                gsi5_correct_flag = True
+
+        if gsi5_correct_flag:
+            pass
+        else:
+            raise Exception()
 
         if net_diag is not None:
             self.result["net_diag"] = ""
@@ -101,7 +110,7 @@ class GetSystemInfoParser:
  ██      ██ ███████ ███████     ██   ████  ██████     ██        ██       ██████   ██████  ██   ████ ██████  
 [/]"""
 
-        print(f"{self.result["NTLogEvent"]}")
+        print(f"{self.result["Process"]}")
         return self.result
 
     def parse_single_block(self, txt, current_block_name):
@@ -147,8 +156,7 @@ class GetSystemInfoParser:
                 return
 
     def parse_installed_product_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = {}
-        name = None
+        self.result[current_block_name] = []
         windows_items = ("Microsoft Visual C++", "Security Update for Microsoft", "Update for Microsoft", "GDR ", "Service Pack ",
                          "Sql Server Customer Experience", "Office 16 Click-to-Run ", "Transact-SQL ScriptDom", "T-SQL ScriptDom",
                          "Batch Parser", "Shared Management Objects Extensions", "RsFx Driver", "Tools for Office Runtime (x64)",
@@ -166,67 +174,82 @@ class GetSystemInfoParser:
                     for i in range (0, 6):
                         next(txt)
                 else:
-                    self.result[current_block_name][name[1]] = {}
-                continue
-
-            if "[:]" in line:
-                key, value = line.split("[:]", 1)
-                self.result[current_block_name][name[1]][key] = value
+                    self.result[current_block_name].append({
+                        "Name": name[-1],
+                        "Uninstall": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                        "Vendor": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                        "Version": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                        "InstallDate": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                        "InstallLocation": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                        "Language": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    })
+                    continue
 
             if line.startswith("</"):
                 return
 
     def parse_process_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = {}
-        process = None
+        self.result[current_block_name] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
+
+            if line.startswith("</"):
+                return
 
             if not line:
                 continue
 
             if "||" in line and line.startswith("Modules[:]") != True:
                 process = line.split("||")
-                self.result[current_block_name][process[0]] = {}
-                self.result[current_block_name][process[0]]["Version_dev"] = process[1]
-                self.result[current_block_name][process[0]]["Version"] = process[2]
-                self.result[current_block_name][process[0]]["Product_name"] = process[-4]
+                self.result[current_block_name].append({
+                    "Process": process[0],
+                    "Version_dev": process[1],
+                    "Version": process[2],
+                    "FullName": process[-4],
+                })
                 continue
 
             if line == "CommandLine[:]":
                 for _ in range(0, 8):
                     next(txt, None)
-            elif line.startswith("</"):
-                return
-            else:
-                key, value = line.split("[:]", 1)
-                self.result[current_block_name][process[0]][key] = value
 
     def parse_service_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = {}
-        process = None
+        self.result[current_block_name] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
+
+            if line.startswith("</"):
+                return
 
             if not line:
                 continue
 
             if "||" in line and line.startswith("Modules[:]") != True:
-                process = line.split("||")
-                self.result[current_block_name][process[0]] = {}
-                self.result[current_block_name][process[0]]["Version_dev"] = process[1]
-                self.result[current_block_name][process[0]]["Version"] = process[2]
-                self.result[current_block_name][process[0]]["Product_name"] = process[-4]
+                service = line.split("||")
+                self.result[current_block_name].append({
+                    "Service": service[0],
+                    "Version_dev": service[1],
+                    "Version": service[2],
+                    "FullName": service[-4],
+                    "Pathname": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Name": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "ServiceType": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "ProcessID": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "AcceptPause": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "AcceptStop": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Description": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "DisplayName": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Started": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "StartMode": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "StopName": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "State": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                    "Status": next(txt, None).decode("utf-8").rstrip("\r\n").strip().split("[:]")[-1],
+                })
                 continue
 
             if line == "CommandLine[:]":
-                for _ in range(0, 12):
+                for _ in range(0, 8):
                     next(txt, None)
-            elif line.startswith("</"):
-                return
-            else:
-                key, value = line.split("[:]", 1)
-                self.result[current_block_name][process[0]][key] = value
 
     def parse_hosts_block(self, txt, current_block_name: str):
         self.result[current_block_name] = ""
@@ -321,12 +344,40 @@ class GetSystemInfoParser:
                 })
 
     @staticmethod
-    def open_gsi5txt_inside_gsi6zip(gsi6_file_name: str) -> tuple[list[bytes], Any] | list[bytes]:
+    def parse_evt_file(evt_bytes):
+        parsed_records = []
+        sanitized_record = {}
+        log_file = Evtx(evt_bytes)
+
+        for record in log_file:
+            # Пытаемся преобразовать коллекцию в словарь через внутренний метод ._asdict()
+            # Если метод недоступен, собираем словарь вручную из итератора
+            if hasattr(record, "_asdict"):
+                record_dict = record._asdict()
+            else:
+                record_dict = dict(record.items()) if hasattr(record, "items") else dict(record)
+
+            # Приводим типы к строкам для безопасной сериализации
+            for key, value in record_dict.items():
+                if isinstance(value, (bytes, bytearray)):
+                    sanitized_record[key] = value.hex()
+                elif hasattr(value, "__str__"):
+                    sanitized_record[key] = str(value)
+                else:
+                    sanitized_record[key] = value
+
+            parsed_records.append(sanitized_record)
+
+        return parsed_records
+
+    @staticmethod
+    def open_gsi5txt_inside_gsi6zip(gsi6_file_name: str):
         r"""
         Принимает название файла GSI6.
         :return: IO[bytes]
             Возвращает текстовый файл GetSystemInfo...txt в формате списка.
         """
+        gsi5_txt, net_diag, evt_kel, evt_sys, evt_app = "", None, False, False, False
         with ZipFile(gsi6_file_name) as archive:
             inner_getsysteminfo = next(
                 (
@@ -340,13 +391,35 @@ class GetSystemInfoParser:
                 with ZipFile(BytesIO(archive_inner.read())) as inner:
                     with inner.open(inner.namelist()[0]) as txt:
                         gsi5_txt = txt.readlines()
+
             if "Network_diagnostics.txt" in archive.namelist():
                 for name in archive.namelist():
                     if name.startswith("Network_diagnostics"):
                         with archive.open(name) as txt:
                             net_diag = txt.readlines()
-                            return gsi5_txt, net_diag
-            return gsi5_txt, None
+
+            if "Eventlogs/Kaspersky Event Log.evt" in archive.namelist():
+                with BytesIO(archive.read("Eventlogs/Kaspersky Event Log.evt")) as evt:
+                    try:
+                        evt_kel = True
+                    except:
+                        evt_kel = False
+
+            if "Eventlogs/System.evt" in archive.namelist():
+                with BytesIO(archive.read("Eventlogs/System.evt")) as evt:
+                    try:
+                        evt_sys = True
+                    except:
+                        evt_sys = False
+
+            if "Eventlogs/Application.evt" in archive.namelist():
+                with BytesIO(archive.read("Eventlogs/Application.evt")) as evt:
+                    try:
+                        evt_app = True
+                    except:
+                        evt_app = False
+
+            return gsi5_txt, net_diag, evt_kel, evt_sys, evt_app
 
     @staticmethod
     def open_gsi5txt(gsi_file_name: str) -> list[bytes]:
@@ -358,34 +431,36 @@ class GetSystemInfoParser:
             #     except UnicodeDecodeError, AttributeError:
             #         line = line.decode("ansi").strip()
             #     readed.append(line)
-            return txt.readlines(), None
+            return txt.readlines()
 
     @staticmethod
     def open_gsi5zip(gsi_file_name: str) -> list[bytes]:
         with ZipFile(gsi_file_name) as archive:
             with archive.open(archive.namelist()[0]) as txt:
-                return txt.readlines(), None
+                return txt.readlines()
 
     @staticmethod
     def get_information_from_gsi(gsi_file_name):
         if gsi_file_name.endswith(".txt"):
             with open(gsi_file_name, "r+", encoding="utf-8") as f:
                 if "GetSystemInfo version" in f.readline():
-                    return GetSystemInfoParser.open_gsi5txt(gsi_file_name)
+                    gsi_out = GetSystemInfoParser.open_gsi5txt(gsi_file_name)
+                    return gsi_out, None, None, None, None
         elif gsi_file_name.endswith(".zip"):
             with ZipFile(gsi_file_name) as archive:
                 if len(archive.namelist()) == 1 and archive.namelist()[0].startswith("GetSystemInfo"):
-                    return GetSystemInfoParser.open_gsi5zip(gsi_file_name)
+                    gsi_out = GetSystemInfoParser.open_gsi5zip(gsi_file_name)
+                    return gsi_out, None, None, None, None
                 else:
                     for name in archive.namelist():
                         if name.startswith("GetSystemInfo") and name.endswith(".zip"):
                             return GetSystemInfoParser.open_gsi5txt_inside_gsi6zip(gsi_file_name)
-        return "Unknown", None
+        return "Unknown", None, None, None, None
 
 
 if __name__ == "__main__":
     bigc = GetSystemInfoParser()
     reports_list = bigc.get_reports()
-    txt, net_diag = bigc.get_information_from_gsi(reports_list[4])
-    bigc.main_reading_thread(txt, net_diag)
+    txt, net_diag, evt_kel, evt_sys, evt_app = bigc.get_information_from_gsi(reports_list[4])
+    bigc.main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
     print(f"\n\n{reports_list}")
