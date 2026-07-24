@@ -26,16 +26,16 @@ class ChooseGSI(Screen):
     def compose(self) -> ComposeResult:
         reports = self.app.GSI6.get_reports()
         with Vertical():
-            preview = """┌――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――┐
-▏              ▏                                                                                                                  ▏
-▏  [lightgreen][blink].::   .::[/][/]   ▏    ██████╗ ███████╗████████╗███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗██╗███╗   ██╗███████╗ ██████╗   ▏
-▏  [lightgreen][blink].::  .:: [/][/]   ▏   ██╔════╝ ██╔════╝╚══██╔══╝██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║██║████╗  ██║██╔════╝██╔═══██╗  ▏
-▏  [lightgreen][blink].:: .::  [/][/]   ▏   ██║  ███╗█████╗     ██║   ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║██║██╔██╗ ██║█████╗  ██║   ██║  ▏
-▏  [lightgreen][blink].: .:    [/][/]   ▏   ██║   ██║██╔══╝     ██║   ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██║██║╚██╗██║██╔══╝  ██║   ██║  ▏
-▏  [lightgreen][blink].::  .:: [/][/]   ▏   ╚██████╔╝███████╗   ██║   ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║██║██║ ╚████║██║     ╚██████╔╝  ▏
-▏  [lightgreen][blink].::   .:: [/][/]  ▏    ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝   ▏
-▏              ▏                                                                                                [dim]by @Optionalles[/]   ▏
-└――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――┘
+            preview = """┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃              ┃                                                                                                                 ┃
+┃  [lightgreen][blink].::   .::[/][/]   ┃    ██████╗ ███████╗████████╗███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗██╗███╗   ██╗███████╗ ██████╗  ┃
+┃  [lightgreen][blink].::  .:: [/][/]   ┃   ██╔════╝ ██╔════╝╚══██╔══╝██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║██║████╗  ██║██╔════╝██╔═══██╗ ┃
+┃  [lightgreen][blink].:: .::  [/][/]   ┃   ██║  ███╗█████╗     ██║   ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║██║██╔██╗ ██║█████╗  ██║   ██║ ┃
+┃  [lightgreen][blink].: .:    [/][/]   ┃   ██║   ██║██╔══╝     ██║   ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██║██║╚██╗██║██╔══╝  ██║   ██║ ┃
+┃  [lightgreen][blink].::  .:: [/][/]   ┃   ╚██████╔╝███████╗   ██║   ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║██║██║ ╚████║██║     ╚██████╔╝ ┃
+┃  [lightgreen][blink].::   .:: [/][/]  ┃    ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝  ┃
+┃              ┃                                                                                                [dim]by @Optionalles[/]  ┃
+┗━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 """
 
             faq = """
@@ -68,7 +68,6 @@ before launching the utility.                                      исполь�
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         self.app.choosed_gsi_name = event.option.prompt
         txt, net_diag, evt_kel, evt_sys, evt_app = self.app.GSI6.get_information_from_gsi(self.app.choosed_gsi_name)
-        self.app.GSI6.result = {}
         try:
             self.app.result = self.app.GSI6.main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
         except:
@@ -133,7 +132,7 @@ class GetSystemInfo(Screen):
     ]
 
     def compose(self) -> ComposeResult:
-        yield Static(f"┌────── GSI6 Menu ──────┐ ┌{(100 - len(self.app.choosed_gsi_name[:-4])) // 2 * "─"} {self.app.choosed_gsi_name[:-4]} {(100 - len(self.app.choosed_gsi_name[:-4])) // 2 * "─"}┐", classes="sttic")
+        yield Static(f"┏━━━━━━ GSI6 Menu ━━━━━━┓ ┏{(100 - len(self.app.choosed_gsi_name[:-4])) // 2 * "━"} {self.app.choosed_gsi_name[:-4]} {(100 - len(self.app.choosed_gsi_name[:-4])) // 2 * "━"}┓", classes="sttic")
         with Horizontal():
             yield OptionList("Kaspersky Info",
                              "System",
@@ -156,8 +155,6 @@ class GetSystemInfo(Screen):
                 yield Input(placeholder="➤ Search...", id="search")
                 yield Static(id="table_information", classes="table_information")
 
-
-        # yield Static("└───────────────────────┘ └─────────────────────────────────────────────────────────────────┘")
         yield Footer()
 
     def on_mount(self):
@@ -226,51 +223,73 @@ class GetSystemInfo(Screen):
 
         for i in self.app.result["InstalledProduct"]:
 
-            if "Kaspersky" in i or "Сервер администрирования" in i or "Агент администрирования" in i or "Плагин управления" in i:
-                klproducts = klproducts + "▪ " + i + " (" + self.app.result["InstalledProduct"][i]["Version"] + ")" + "\n" + "                 "
+            if ("Kaspersky" in i["Name"] or "Сервер администрирования" in i["Name"] or "Агент администрирования" in i["Name"] or "Плагин управления" in i["Name"]) and f"{i["Name"] + " (" + i["Version"] + ")"}" not in klproducts:
+                klproducts = klproducts + "▪ " + i["Name"] + " (" + i["Version"] + ")" + "\n" + "┃                 "
 
-            avstate = f""" [bold][lightgreen]ANTI-VIRUS STATISTIC (AVSTATE)[/][/]
- [dim]KSC Server:....[/] [lightyellow]{self.app.result["AVState"]["Protection_AdmServer"]}[/]
- [dim]Host ID:.......[/] {self.app.result["AVState"]["Protection_HostId"]}
+#         self.app.avstate = f""" [bold][lightgreen]ANTI-VIRUS STATISTIC (AVSTATE)[/][/]
+#  [dim]KSC Server:....[/] [lightyellow]{self.app.result["AVState"]["Protection_AdmServer"]}[/]
+#  [dim]Host ID:.......[/] {self.app.result["AVState"]["Protection_HostId"]}
+#
+#  [dim]AV Installed:..[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "[red]NO[/]"}
+#  [dim]AV Running:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "[red]NO[/]"}
+#  [dim]AV Bases Date:.[/] {self.app.result["AVState"]["Protection_BasesDate"]}
+#  [dim]Last Scan Date:[/] {self.app.result["AVState"]["Protection_LastFscan"]}
+#  [dim]Last Connect:..[/] {self.app.result["AVState"]["Protection_LastConnected"]}
+#
+#  [dim]Dynamic VM:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "[red]NO[/]"}
+#  [dim]Ex Tenant ID:..[/] {self.app.result["AVState"]["Protection_ExternalTenantId"]}
+# """
+#         self.app.text0 = f""" [bold][lightgreen]GENERAL INFORMATION[/][/]
+#  [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]} {self.app.result["OperatingSystem"]["Version"]}
+#  [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
+#  [dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}
+#  [dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
+#  [dim]KL Products:...[/] {klproducts}
+# \n""" + self.app.avstate
 
- [dim]AV Installed:..[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "[red]NO[/]"}
- [dim]AV Running:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "[red]NO[/]"}
- [dim]AV Bases Date:.[/] {self.app.result["AVState"]["Protection_BasesDate"]}
- [dim]Last Scan Date:[/] {self.app.result["AVState"]["Protection_LastFscan"]}
- [dim]Last Connect:..[/] {self.app.result["AVState"]["Protection_LastConnected"]}
+#         self.app.avstate = f"""┃ [bold][lightgreen]ANTI-VIRUS STATISTIC (AVSTATE)[/][/]{" " * (100 - int(len("ANTI-VIRUS STATISTIC (AVSTATE)"))) + "┃"}
+# ┃ [dim]KSC Server:....[/] {self.app.result["AVState"]["Protection_AdmServer"]}{" " * (100 - int(len(f"KSC Server:.... {self.app.result["AVState"]["Protection_AdmServer"]}"))) + "┃"}
+# ┃ [dim]Host ID:.......[/] {self.app.result["AVState"]["Protection_HostId"]}{" " * (100 - int(len(f"Host ID:....... {self.app.result["AVState"]["Protection_HostId"]}"))) + "┃"}
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+# ┃ [dim]AV Installed:..[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "[red]NO[/]"}{" " * (100 - int(len(f"AV Installed:.. {"YES" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "NO"}"))) + "┃"}
+# ┃ [dim]AV Running:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "[red]NO[/]"}{" " * (100 - int(len(f"AV Running:.... {"YES" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "NO"}"))) + "┃"}
+# ┃ [dim]AV Bases Date:.[/] {self.app.result["AVState"]["Protection_BasesDate"]}{" " * (100 - int(len(f"AV Bases Date:. {self.app.result["AVState"]["Protection_BasesDate"]}"))) + "┃"}
+# ┃ [dim]Last Scan Date:[/] {self.app.result["AVState"]["Protection_LastFscan"]}{" " * (100 - int(len(f"Last Scan Date: {self.app.result["AVState"]["Protection_LastFscan"]}"))) + "┃"}
+# ┃ [dim]Last Connect:..[/] {self.app.result["AVState"]["Protection_LastConnected"]}{" " * (100 - int(len(f"Last Connect:.. {self.app.result["AVState"]["Protection_LastConnected"]}"))) + "┃"}
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+# ┃ [dim]Dynamic VM:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "[red]NO[/]"}{" " * (100 - int(len(f"Dynamic VM:.... {"YES" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "NO"}"))) + "┃"}
+# ┃ [dim]Ex Tenant ID:..[/] {self.app.result["AVState"]["Protection_ExternalTenantId"]}{" " * (100 - int(len(f"Ex Tenant ID:.. {self.app.result["AVState"]["Protection_ExternalTenantId"]}"))) + "┃"}
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"""
+#
+#         self.app.text0 = f"""┃ [bold][lightgreen]GENERAL INFORMATION[/][/]{" " * (100 - int(len(f"GENERAL INFORMATION"))) + "┃"}
+# ┃ [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]}{self.app.result["OperatingSystem"]["Version"]} {" " * (100 - int(len(f"OS:............ {self.app.result["OperatingSystem"]["Caption"]} {self.app.result["OperatingSystem"]["Version"]}"))) + "┃"}
+# ┃ [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}{" " * (100 - int(len(f"Processor:..... {self.app.result["Processor"]["Name"]}"))) + "┃"}
+# ┃ [dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}{" " * (100 - int(len(f"GSI ver:....... {self.app.result["gsi_ver"]}"))) + "┃"}
+# ┃ [dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb{" " * (100 - int(len(f"Memory:........ {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb"))) + "┃"}
+# ┃ [dim]KL Products:...[/] {klproducts}
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n"""+self.app.avstate
 
- [dim]Dynamic VM:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "[red]NO[/]"}
- [dim]Ex Tenant ID:..[/] {self.app.result["AVState"]["Protection_ExternalTenantId"]}
-"""
-            self.app.text0 = f""" [bold][lightgreen]GENERAL INFORMATION[/][/]
- [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]} {self.app.result["OperatingSystem"]["Version"]}
- [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
- [dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}
- [dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
- [dim]KL Products:...[/] {klproducts}
-\n""" + avstate
+        self.app.avstate = f"""┃ [bold][lightgreen]ANTI-VIRUS STATISTIC (AVSTATE)[/][/]
+┃ [dim]KSC Server:....[/] {self.app.result["AVState"]["Protection_AdmServer"]}
+┃ [dim]Host ID:.......[/] {self.app.result["AVState"]["Protection_HostId"]}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ [dim]AV Installed:..[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "[red]NO[/]"}
+┃ [dim]AV Running:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "[red]NO[/]"}
+┃ [dim]AV Bases Date:.[/] {self.app.result["AVState"]["Protection_BasesDate"]}
+┃ [dim]Last Scan Date:[/] {self.app.result["AVState"]["Protection_LastFscan"]}
+┃ [dim]Last Connect:..[/] {self.app.result["AVState"]["Protection_LastConnected"]}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ [dim]Dynamic VM:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "[red]NO[/]"}
+┃ [dim]Ex Tenant ID:..[/] {self.app.result["AVState"]["Protection_ExternalTenantId"]}
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"""
 
-            # avstate = f"""▏[bold][lightgreen]ANTI-VIRUS STATISTIC (AVSTATE)[/]
-# ▏[dim]KSC Server:....[/] {self.app.result["AVState"]["Protection_AdmServer"]}
-# ▏[dim]Host ID:.......[/] {self.app.result["AVState"]["Protection_HostId"]}
-# ▏――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-# ▏[dim]AV Installed:..[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvInstalled"] == "1" else "[red]NO[/]"}
-# ▏[dim]AV Running:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_AvRunning"] == "1" else "[red]NO[/]"}
-# ▏[dim]AV Bases Date:.[/] {self.app.result["AVState"]["Protection_BasesDate"]}
-# ▏[dim]Last Scan Date:[/] {self.app.result["AVState"]["Protection_LastFscan"]}
-# ▏[dim]Last Connect:..[/] {self.app.result["AVState"]["Protection_LastConnected"]}
-# ▏――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-# ▏[dim]Dynamic VM:....[/] {"[green]YES[/]" if self.app.result["AVState"]["Protection_DynamicVM"] == "1" else "[red]NO[/]"}
-# ▏[dim]Ex Tenant ID:..[/] {self.app.result["AVState"]["Protection_ExternalTenantId"]}
-# └"""
-
-            # self.app.text0 = f"""▏[bold]GENERAL INFORMATION[/]
-# ▏[dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]} {self.app.result["OperatingSystem"]["Version"]}
-# ▏[dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
-# ▏[dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}
-# ▏[dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
-# ▏[dim]KL Products:...[/] {klproducts}
-# ├――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\n"""+avstate+"――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――"
+        self.app.text0 = f"""┃ [bold][lightgreen]GENERAL INFORMATION[/][/]
+┃ [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]}{self.app.result["OperatingSystem"]["Version"]}
+┃ [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
+┃ [dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}
+┃ [dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
+┃ [dim]KL Products:...[/] {klproducts}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n""" + self.app.avstate
 
     def fill_static_system_info(self):
         disks = ""
@@ -297,36 +316,63 @@ class GetSystemInfo(Screen):
             except:
                 percentage = 0
             size_bar = size_bar * percentage
-            disks = disks + f''' ▪ ({self.app.result["LogicalDisk"][i]["DeviceID"]})      {self.app.result["LogicalDisk"][i]["Description"]}{psta1}{self.app.result["LogicalDisk"][i]["FileSystem"]}{psta2}{size} Gb{psta3}{freespace} Gb
- [lightskyblue]{size_bar}[/][dim]{"█████" * (10 - percentage)}[/]   [lightskyblue]{percentage * 10}%[/]\n
+            disks = disks + f'''┃ ▪ ({self.app.result["LogicalDisk"][i]["DeviceID"]})      {self.app.result["LogicalDisk"][i]["Description"]}{psta1}{self.app.result["LogicalDisk"][i]["FileSystem"]}{psta2}{size} Gb{psta3}{freespace} Gb
+┃ [lightskyblue]{size_bar}[/][dim]{"█████" * (10 - percentage)}[/]   [lightskyblue]{percentage * 10}%[/]\n┃
 '''
 
-        self.app.text1 = f""" [bold][lightgreen]COMPUTER[/][/]
- [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
- [dim]Cores:.........[/] {str(int(self.app.result["Processor"]["DeviceID"].split("CPU")[1]) + 1) if self.app.result["Processor"]["SocketDesignation"].split()[0] == "CPU" else self.app.result["Processor"]["NumberOfCores"]} (Load {self.app.result["Processor"]["LoadPercentage"]}%)
- [dim]Manufacturer:..[/] {self.app.result["ComputerSystem"]["Manufacturer"]}
- [dim]Computer model:[/] {self.app.result["ComputerSystem"]["Model"]}
- [dim]System date:...[/] {self.app.result["Time"]["Time"]}
+#         self.app.text1 = f""" [bold][lightgreen]COMPUTER[/][/]
+#  [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
+#  [dim]Cores:.........[/] {str(int(self.app.result["Processor"]["DeviceID"].split("CPU")[1]) + 1) if self.app.result["Processor"]["SocketDesignation"].split()[0] == "CPU" else self.app.result["Processor"]["NumberOfCores"]} (Load {self.app.result["Processor"]["LoadPercentage"]}%)
+#  [dim]Manufacturer:..[/] {self.app.result["ComputerSystem"]["Manufacturer"]}
+#  [dim]Computer model:[/] {self.app.result["ComputerSystem"]["Model"]}
+#  [dim]System date:...[/] {self.app.result["Time"]["Time"]}
+#
+#  [bold][lightgreen]BIOS[/][/]
+#  [dim]Name:..........[/] {self.app.result["BIOS"]["Name"]}
+#  [dim]Version:.......[/] {self.app.result["BIOS"]["Version"]}
+#  [dim]Date:..........[/] {self.app.result["BIOS"]["ReleaseDate"][0:4]}/{self.app.result["BIOS"]["ReleaseDate"][4:6]}/{self.app.result["BIOS"]["ReleaseDate"][6:8]}
+#
+#  [bold][lightgreen]MISCELLANEOUS                              MEMORY[/][/]
+#  [dim]Procs count:...[/] {self.app.result["OperatingSystem"]["NumberOfProcesses"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfProcesses"])))}[dim]Physic:....[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
+#  [dim]Users count:...[/] {self.app.result["OperatingSystem"]["NumberOfUsers"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfUsers"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreePhysicalMemory"]) // 1000)} Mb
+#  [dim]Architecture:..[/] {self.app.result["OperatingSystem"]["OSArchitecture"] + (" " * (27 - len(self.app.result["OperatingSystem"]["OSArchitecture"])))}[dim]Virtual:...[/] {str(int(self.app.result["OperatingSystem"]["TotalVirtualMemorySize"]) // 1000)} Mb
+#  [dim]Domain part:...[/] {self.app.result["ComputerSystem"]["PartOfDomain"] + (" " * (27 - len(self.app.result["ComputerSystem"]["PartOfDomain"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreeVirtualMemory"]) // 1000)} Mb
+#  [dim]Domain:........[/] {self.app.result["ComputerSystem"]["Domain"]}
+#  [dim]Workgroup:.....[/] {self.app.result["ComputerSystem"]["Workgroup"]}
+#  [dim]Computer name:.[/] [lightyellow]{self.app.result["ComputerSystem"]["DNSHostName"]}[/]
+#  [dim]User name:.....[/] [lightyellow]{self.app.result["ComputerSystem"]["UserName"]}[/]
+#  [dim]System type:...[/] {self.app.result["ComputerSystem"]["SystemType"]}
+#
+#  [bold]LOCAL DISKS STRUCTURE[/]
+#  [bold][dim]Disk name   Type                       File system   Total space   Free space[/][/]
+# """ + disks
 
- [bold][lightgreen]BIOS[/][/]
- [dim]Name:..........[/] {self.app.result["BIOS"]["Name"]}
- [dim]Version:.......[/] {self.app.result["BIOS"]["Version"]}
- [dim]Date:..........[/] {self.app.result["BIOS"]["ReleaseDate"][0:4]}/{self.app.result["BIOS"]["ReleaseDate"][4:6]}/{self.app.result["BIOS"]["ReleaseDate"][6:8]}
-
- [bold][lightgreen]MISCELLANEOUS                              MEMORY[/][/]
- [dim]Procs count:...[/] {self.app.result["OperatingSystem"]["NumberOfProcesses"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfProcesses"])))}[dim]Physic:....[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
- [dim]Users count:...[/] {self.app.result["OperatingSystem"]["NumberOfUsers"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfUsers"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreePhysicalMemory"]) // 1000)} Mb
- [dim]Architecture:..[/] {self.app.result["OperatingSystem"]["OSArchitecture"] + (" " * (27 - len(self.app.result["OperatingSystem"]["OSArchitecture"])))}[dim]Virtual:...[/] {str(int(self.app.result["OperatingSystem"]["TotalVirtualMemorySize"]) // 1000)} Mb
- [dim]Domain part:...[/] {self.app.result["ComputerSystem"]["PartOfDomain"] + (" " * (27 - len(self.app.result["ComputerSystem"]["PartOfDomain"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreeVirtualMemory"]) // 1000)} Mb
- [dim]Domain:........[/] {self.app.result["ComputerSystem"]["Domain"]}
- [dim]Workgroup:.....[/] {self.app.result["ComputerSystem"]["Workgroup"]}
- [dim]Computer name:.[/] [lightyellow]{self.app.result["ComputerSystem"]["DNSHostName"]}[/]
- [dim]User name:.....[/] [lightyellow]{self.app.result["ComputerSystem"]["UserName"]}[/]
- [dim]System type:...[/] {self.app.result["ComputerSystem"]["SystemType"]}
-
- [bold]LOCAL DISKS STRUCTURE[/]
- [bold][dim]Disk name   Type                       File system   Total space   Free space[/][/]
-""" + disks
+        self.app.text1 = f"""┃ [bold][lightgreen]COMPUTER[/][/]
+┃ [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
+┃ [dim]Cores:.........[/] {str(int(self.app.result["Processor"]["DeviceID"].split("CPU")[1]) + 1) if self.app.result["Processor"]["SocketDesignation"].split()[0] == "CPU" else self.app.result["Processor"]["NumberOfCores"]} (Load {self.app.result["Processor"]["LoadPercentage"]}%)
+┃ [dim]Manufacturer:..[/] {self.app.result["ComputerSystem"]["Manufacturer"]}
+┃ [dim]Computer model:[/] {self.app.result["ComputerSystem"]["Model"]}
+┃ [dim]System date:...[/] {self.app.result["Time"]["Time"]}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ [bold][lightgreen]BIOS[/][/]
+┃ [dim]Name:..........[/] {self.app.result["BIOS"]["Name"]}
+┃ [dim]Version:.......[/] {self.app.result["BIOS"]["Version"]}
+┃ [dim]Date:..........[/] {self.app.result["BIOS"]["ReleaseDate"][0:4]}/{self.app.result["BIOS"]["ReleaseDate"][4:6]}/{self.app.result["BIOS"]["ReleaseDate"][6:8]}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ [bold][lightgreen]MISCELLANEOUS                              MEMORY[/][/]
+┃ [dim]Procs count:...[/] {self.app.result["OperatingSystem"]["NumberOfProcesses"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfProcesses"])))}[dim]Physic:....[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
+┃ [dim]Users count:...[/] {self.app.result["OperatingSystem"]["NumberOfUsers"] + (" " * (27 - len(self.app.result["OperatingSystem"]["NumberOfUsers"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreePhysicalMemory"]) // 1000)} Mb
+┃ [dim]Architecture:..[/] {self.app.result["OperatingSystem"]["OSArchitecture"] + (" " * (27 - len(self.app.result["OperatingSystem"]["OSArchitecture"])))}[dim]Virtual:...[/] {str(int(self.app.result["OperatingSystem"]["TotalVirtualMemorySize"]) // 1000)} Mb
+┃ [dim]Domain part:...[/] {self.app.result["ComputerSystem"]["PartOfDomain"] + (" " * (27 - len(self.app.result["ComputerSystem"]["PartOfDomain"])))}[dim]Available:.[/] {str(int(self.app.result["OperatingSystem"]["FreeVirtualMemory"]) // 1000)} Mb
+┃ [dim]Domain:........[/] {self.app.result["ComputerSystem"]["Domain"]}
+┃ [dim]Workgroup:.....[/] {self.app.result["ComputerSystem"]["Workgroup"]}
+┃ [dim]Computer name:.[/] [lightyellow]{self.app.result["ComputerSystem"]["DNSHostName"]}[/]
+┃ [dim]User name:.....[/] [lightyellow]{self.app.result["ComputerSystem"]["UserName"]}[/]
+┃ [dim]System type:...[/] {self.app.result["ComputerSystem"]["SystemType"]}
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ [bold][lightgreen]LOCAL DISKS STRUCTURE[/][/]
+┃ [bold][dim]Disk name   Type                       File system   Total space   Free space[/][/]
+""" + disks + "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
 
     def fill_table_programs(self, result):
         table = self.query_one("#table_programs", DataTable)
@@ -454,6 +500,10 @@ class GetSystemInfo(Screen):
 [bold][lightgreen]Source:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["Source_name"]}
 [bold][lightgreen]From:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["Log_file"]}
 [bold][lightgreen]User:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["User"]}
+
+[red][bold]Annotation[/][/]
+This Events parsed from GSI5.
+Usually there are event logs only for the last 3 days
 """)
 
     def on_option_list_option_highlighted(self, event: OptionList.OptionHighlighted) -> None:
@@ -517,6 +567,7 @@ class GetSystemInfo(Screen):
 
 
     def action_back(self):
+        self.app.result = {}
         self.app.pop_screen()
 
 
@@ -549,6 +600,7 @@ class GetSystemInfoUtilityParser(App):
         self.text0 = ""
         self.text1 = ""
         self.text2 = ""
+        self.avstate = ""
 
     def on_mount(self):
         self.push_screen(ChooseGSI())
