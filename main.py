@@ -26,6 +26,15 @@ class GetSystemInfoParser:
 
     def main_reading_thread(self, txt: list, net_diag=None, evt_kel=None, evt_sys=None, evt_app=None):
         gsi5_correct_flag = False
+        self.result = {"AVState": {
+            "Protection_AvInstalled": "0",
+            "Protection_AvRunning": "0",
+            "Protection_BasesDate": "",
+            "Protection_LastFscan": "",
+            "Protection_LastConnected": "",
+            "Protection_DynamicVM": "0",
+            "Protection_ExternalTenantId": ""
+        }}
         if txt == "Unknown":
             return "Unknown"
         txt = iter(txt)
@@ -110,7 +119,7 @@ class GetSystemInfoParser:
  ██      ██ ███████ ███████     ██   ████  ██████     ██        ██       ██████   ██████  ██   ████ ██████  
 [/]"""
 
-        print(f"{self.result["Process"]}")
+        print(f"{self.result["InstalledProduct"]}")
         return self.result
 
     def parse_single_block(self, txt, current_block_name):
@@ -119,7 +128,11 @@ class GetSystemInfoParser:
             '<Time>', '<BIOS>', '<Processor>', '<OperatingSystem>', '<ComputerSystem>', '<Environment>', '<Registry>'
         Добавляет спаршенные результаты в self.result
         """
-        self.result[current_block_name] = {}
+        if current_block_name == "AVState":
+            pass
+        else:
+            self.result[current_block_name] = {}
+
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
             #  Если строка пустая, то идем дальше:
@@ -201,12 +214,13 @@ class GetSystemInfoParser:
 
             if "||" in line and line.startswith("Modules[:]") != True:
                 process = line.split("||")
-                self.result[current_block_name].append({
-                    "Process": process[0],
-                    "Version_dev": process[1],
-                    "Version": process[2],
-                    "FullName": process[-4],
-                })
+                if len(process) > 4:
+                    self.result[current_block_name].append({
+                        "Process": process[0],
+                        "Version_dev": process[1],
+                        "Version": process[2],
+                        "FullName": process[-4],
+                    })
                 continue
 
             if line == "CommandLine[:]":
@@ -256,6 +270,10 @@ class GetSystemInfoParser:
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
             if line.startswith("</"):
+                return
+            elif line.endswith(f"</{current_block_name}>"):
+                line = line.strip(f"</{current_block_name}>")
+                self.result[current_block_name] = self.result[current_block_name] + line + "\n"
                 return
             else:
                 self.result[current_block_name] = self.result[current_block_name] + line + "\n"
@@ -461,6 +479,6 @@ class GetSystemInfoParser:
 if __name__ == "__main__":
     bigc = GetSystemInfoParser()
     reports_list = bigc.get_reports()
-    txt, net_diag, evt_kel, evt_sys, evt_app = bigc.get_information_from_gsi(reports_list[4])
+    txt, net_diag, evt_kel, evt_sys, evt_app = bigc.get_information_from_gsi(reports_list[7])
     bigc.main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
     print(f"\n\n{reports_list}")
