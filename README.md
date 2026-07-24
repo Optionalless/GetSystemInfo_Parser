@@ -1,9 +1,10 @@
-# Kaspersky GetSystemInfo Parser
+## Kaspersky GetSystemInfo Parser
 The script is a CLI utility in a TUI format. 
 Eliminates the need to manually review a GSI5 or GSI6 report by presenting data in human-friendly form.
-### Demo
-![UI-demo.gif](URL)
-### What information does the GSI report provide us with?:
+
+<img width="1205" height="665" alt="image" src="https://github.com/user-attachments/assets/b6ef5abc-fb0f-45e8-8693-af3b272d291a" />
+
+## What information does the GSI report provide us with?:
 
 - Kaspersky info:
   <details>
@@ -97,5 +98,5 @@ Eliminates the need to manually review a GSI5 or GSI6 report by presenting data 
 
 - HOSTS - HOSTS file of the same name from the device
 
-### Guide how to get Kaspersky GSI5 or GSI6 report:
+## Guide how to get Kaspersky GSI5 or GSI6 report:
 [ENG](https://support.kaspersky.com/common/utility/3632) [RU](https://support.kaspersky.ru/common/utility/3632)
