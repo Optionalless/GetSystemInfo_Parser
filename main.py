@@ -42,7 +42,7 @@ class GetSystemInfoParser:
         for line in txt:
             try:
                 line = line.decode("utf-8").rstrip("\r\n").strip()
-            except UnicodeDecodeError, AttributeError:
+            except (UnicodeDecodeError, AttributeError):
                 line = line.decode("cp1251").rstrip("\r\n").strip()
 
             #  Если строка пустая, то пропускаем итерацию:
