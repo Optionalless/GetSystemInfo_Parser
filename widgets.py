@@ -284,7 +284,7 @@ class GetSystemInfo(Screen):
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"""
 
         self.app.text0 = f"""┃ [bold][lightgreen]GENERAL INFORMATION[/][/]
-┃ [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]}{self.app.result["OperatingSystem"]["Version"]}
+┃ [dim]OS:............[/] {self.app.result["OperatingSystem"]["Caption"]} ({self.app.result["OperatingSystem"]["Version"]})
 ┃ [dim]Processor:.....[/] {self.app.result["Processor"]["Name"]}
 ┃ [dim]GSI ver:.......[/] {self.app.result["gsi_ver"]}
 ┃ [dim]Memory:........[/] {str(int(self.app.result["OperatingSystem"]["TotalVisibleMemorySize"]) // 1000)} Mb
