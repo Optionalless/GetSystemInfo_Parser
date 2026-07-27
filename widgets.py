@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult, Screen
 from textual.widgets import Footer, Static, Input, OptionList, DataTable
 from textual.containers import Vertical, Horizontal, Grid
-from main import GetSystemInfoParser
+from parser import GetSystemInfoParser
 
 class ChooseGSI(Screen):
 
