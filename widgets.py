@@ -24,7 +24,6 @@ class ChooseGSI(Screen):
         ]
 
     def compose(self) -> ComposeResult:
-        reports = self.app.GSI6.get_reports()
         with Vertical():
             preview = """┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃              ┃                                                                                                                 ┃
@@ -58,18 +57,20 @@ interface in general, please use [Ctrl+Mouse Wheel]                интерф�
 before launching the utility.                                      используйте зажатый [Ctrl+Колесико мыши].
 """
             yield Static(preview)
-            yield OptionList(
-                *reports,
-                id='menu',
-            )
+            yield OptionList(id='menu')
             yield Static(faq)
         yield Footer()
 
+    def on_mount(self):
+        reports = GetSystemInfoParser().get_reports()
+        for report in reports:
+            self.query_one("#menu", OptionList).add_option(report)
+
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         self.app.choosed_gsi_name = event.option.prompt
-        txt, net_diag, evt_kel, evt_sys, evt_app = self.app.GSI6.get_information_from_gsi(self.app.choosed_gsi_name)
+        txt, net_diag, evt_kel, evt_sys, evt_app = GetSystemInfoParser().get_information_from_gsi(self.app.choosed_gsi_name)
         try:
-            self.app.result = self.app.GSI6.main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
+            self.app.result = GetSystemInfoParser().main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
         except:
             self.app.notify("The report is incorrect")
             return
@@ -84,7 +85,7 @@ before launching the utility.                                      исполь�
     def action_refresh_page(self) -> None:
         option_list = self.query_one("#menu", OptionList)
         option_list.clear_options()
-        for _ in self.app.GSI6.get_reports():
+        for _ in GetSystemInfoParser().get_reports():
             option_list.add_option(_)
         self.notify("Refreshed!")
 
@@ -494,8 +495,9 @@ class GetSystemInfo(Screen):
                     filtered.append(port)
             self.fill_table_gsi5_event_log(filtered)
 
-    def on_data_table_row_highlighted(self, event: DataTable.RowSelected):
-        self.query_one("#table_information", Static).update(f"""
+    def on_data_table_row_highlighted(self, event: DataTable.RowHighlighted):
+        if "table_gsi5_event_log" == event.data_table.id:
+            self.query_one("#table_information", Static).update(f"""
 [bold][lightgreen]Message:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["Message"]}
 [bold][lightgreen]Source:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["Source_name"]}
 [bold][lightgreen]From:[/][/] {self.app.result["NTLogEvent"][event.cursor_row]["Log_file"]}
@@ -504,7 +506,7 @@ class GetSystemInfo(Screen):
 [red][bold]Annotation[/][/]
 This Events parsed from GSI5.
 Usually there are event logs only for the last 3 days
-""")
+    """)
 
     def on_option_list_option_highlighted(self, event: OptionList.OptionHighlighted) -> None:
         self.query_one("#text", Static).display = False
@@ -592,7 +594,6 @@ class GetSystemInfoUtilityParser(App):
 
     def __init__(self):
         super().__init__()
-        self.GSI6 = GetSystemInfoParser()
         self.choosed_gsi_name = ""
         self.result = {}
         self.list_of_gsi_names = []
