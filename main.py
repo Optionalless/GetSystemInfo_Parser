@@ -10,7 +10,8 @@ class GetSystemInfoParser:
     def __init__(self):
         self.result = {}
         self.gsi6directory = Path('./')
-        self.gsi6prefix = ('GSI6',  "report", "GetSystemInfo", "GSI", "GSI5")
+        self.gsi_prefix = ('GSI6',  "report", "GetSystemInfo", "GSI", "GSI5", "GetSystemInfo6", "GetSystemInfo5")
+        self.gsi_endfix = (".zip", ".txt")
         self.gsi5prefix = 'GetSystemInfo'
         self.gsi5keywords = ['<Time>', '<BIOS>', '<Processor>', '<OperatingSystem>', '<ComputerSystem>',
                         '<Environment>', '<Registry>', "<VideoController>"]
@@ -20,21 +21,30 @@ class GetSystemInfoParser:
         #  Поиск всех отчетов GSI6 в текущем каталоге
         gsi6reports = []
         for file_path in self.gsi6directory.iterdir():
-            if file_path.is_file() and file_path.name.startswith(self.gsi6prefix):
+            if file_path.is_file() and file_path.name.startswith(self.gsi_prefix) and file_path.name.endswith(self.gsi_endfix):
                 gsi6reports.append(file_path.name)
         return gsi6reports
 
     def main_reading_thread(self, txt: list, net_diag=None, evt_kel=None, evt_sys=None, evt_app=None):
         gsi5_correct_flag = False
-        self.result = {"AVState": {
+        self.result = {
+            "AVState": {
+            "Protection_AdmServer": "",
+            "Protection_HostId": "",
             "Protection_AvInstalled": "0",
             "Protection_AvRunning": "0",
             "Protection_BasesDate": "",
             "Protection_LastFscan": "",
             "Protection_LastConnected": "",
+            "Protection_NagentVersion": "",
+            "Protection_NagentFullVersion": "",
             "Protection_DynamicVM": "0",
-            "Protection_ExternalTenantId": ""
-        }}
+            "Protection_ExternalTenantId": "",
+            "Protection_RtpState": "",
+            "Protection_HasRtp": ""
+        },
+            "Network_Agent_report": ""
+        }
         if txt == "Unknown":
             return "Unknown"
         txt = iter(txt)
