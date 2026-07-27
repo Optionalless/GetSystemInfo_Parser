@@ -1,3 +1,4 @@
+
 from typing import Any
 from zipfile import ZipFile
 from pathlib import Path
@@ -8,7 +9,136 @@ from dissect.eventlog.evtx import Evtx
 class GetSystemInfoParser:
 
     def __init__(self):
-        self.result = {}
+        self.result = {
+            "Time": {},
+            "BIOS": {
+                "BuildNumber": "",
+                "InstallDate": '',
+                "Manufacturer": '',
+                "Name": '',
+                "PrimaryBIOS": '',
+                "ReleaseDate": '',
+                "SerialNumber": '',
+                "SMBIOSBIOSVersion": '',
+                "SMBIOSMajorVersion": '',
+                "SMBIOSMinorVersion": '',
+                "SMBIOSPresent": '',
+                "SoftwareElementID": '',
+                "SoftwareElementState": '',
+                "Status": '',
+                "TargetOperatingSystem": '',
+                "Version": ''
+            },
+            "Processor": {
+                "AddressWidth": '',
+                "Architecture": '',
+                "Availability": '',
+                "Caption": '',
+                "CpuStatus": '',
+                "CurrentClockSpeed": '',
+                "CurrentVoltage": '',
+                "DataWidth": '',
+                "Description": '',
+                "DeviceID": '',
+                "Family": '',
+                "LastErrorCode": '',
+                "Level": '',
+                "LoadPercentage": '',
+                "Manufacturer": '',
+                "MaxClockSpeed": '',
+                "Name": '',
+                "NumberOfCores": '',
+                "NumberOfLogicalProcessors": '',
+                "ProcessorType": '',
+                "Role": '',
+                "SocketDesignation": '',
+                "Status": '',
+                "StatusInfo": '',
+                "Stepping": '',
+                "SystemName": '',
+                "UpgradeMethod": '',
+                "Version": '',
+                "VoltageCaps": ''
+            },
+            "OperatingSystem": {
+                "BootDevice": '',
+                "BuildNumber": '',
+                "BuildType": '',
+                "Caption": '',
+                "CountryCode": '',
+                "CSDVersion": '',
+                "Description": '',
+                "FreePhysicalMemory": '',
+                "FreeSpaceInPagingFiles": '',
+                "FreeVirtualMemory": '',
+                "InstallDate": '',
+                "LastBootUpTime": '',
+                "LocalDateTime": '',
+                "Manufacturer": '',
+                "MUILanguages": '',
+                "NumberOfProcesses": '',
+                "NumberOfUsers": '',
+                "OSArchitecture": '',
+                "OSLanguage": '',
+                "ServicePackMajorVersion": '',
+                "ServicePackMinorVersion": '',
+                "SizeStoredInPagingFiles": '',
+                "SystemDevice": '',
+                "SystemDirectory": '',
+                "TotalVirtualMemorySize": '',
+                "TotalVisibleMemorySize": '',
+                "Version": '',
+                "WindowsDirectory": ''
+            },
+            "ComputerSystem": {
+                "BootupState": '',
+                "DNSHostName": '',
+                "Domain": '',
+                "DomainRole": '',
+                "Manufacturer": '',
+                "Model": '',
+                "NetworkServerModeEnabled": '',
+                "PartOfDomain": '',
+                "PCSystemType": '',
+                "Status": '',
+                "SupportContactDescription": '',
+                "SystemType": '',
+                "UserName": '',
+                "Workgroup": ''
+            },
+            "Environment": {},
+            "Printer": {},
+            "VideoController": {},
+            "DesktopMonitor": {},
+            "SoundDevice": {},
+            "NTLogEvent": [],
+            "LogicalDisk": {},
+            "InstalledProduct": [],
+            "Process": [],
+            "Services": [],
+            "Registry": {},
+            "BHO": '',
+            "PnPSignedDriver": [],
+            "Share": {},
+            "OpenPorts": [],
+            "HOSTS": '',
+            "AVState": {
+                "Protection_AdmServer": "",
+                "Protection_HostId": "",
+                "Protection_AvInstalled": "0",
+                "Protection_AvRunning": "0",
+                "Protection_BasesDate": "",
+                "Protection_LastFscan": "",
+                "Protection_LastConnected": "",
+                "Protection_NagentVersion": "",
+                "Protection_NagentFullVersion": "",
+                "Protection_DynamicVM": "0",
+                "Protection_ExternalTenantId": "",
+                "Protection_RtpState": "",
+                "Protection_HasRtp": ""
+            },
+            "Network_Agent_report": ''
+        }
         self.gsi6directory = Path('./')
         self.gsi_prefix = ('GSI6',  "report", "GetSystemInfo", "GSI", "GSI5", "GetSystemInfo6", "GetSystemInfo5")
         self.gsi_endfix = (".zip", ".txt")
@@ -27,24 +157,7 @@ class GetSystemInfoParser:
 
     def main_reading_thread(self, txt: list, net_diag=None, evt_kel=None, evt_sys=None, evt_app=None):
         gsi5_correct_flag = False
-        self.result = {
-            "AVState": {
-            "Protection_AdmServer": "",
-            "Protection_HostId": "",
-            "Protection_AvInstalled": "0",
-            "Protection_AvRunning": "0",
-            "Protection_BasesDate": "",
-            "Protection_LastFscan": "",
-            "Protection_LastConnected": "",
-            "Protection_NagentVersion": "",
-            "Protection_NagentFullVersion": "",
-            "Protection_DynamicVM": "0",
-            "Protection_ExternalTenantId": "",
-            "Protection_RtpState": "",
-            "Protection_HasRtp": ""
-        },
-            "Network_Agent_report": ""
-        }
+
         if txt == "Unknown":
             return "Unknown"
         txt = iter(txt)
@@ -138,10 +251,10 @@ class GetSystemInfoParser:
             '<Time>', '<BIOS>', '<Processor>', '<OperatingSystem>', '<ComputerSystem>', '<Environment>', '<Registry>'
         Добавляет спаршенные результаты в self.result
         """
-        if current_block_name == "AVState":
-            pass
-        else:
-            self.result[current_block_name] = {}
+        # if current_block_name == "AVState":
+        #     pass
+        # else:
+        #     self.result[current_block_name] = {}
 
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
@@ -158,7 +271,7 @@ class GetSystemInfoParser:
                 return
 
     def parse_logical_disk_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = {}
+        # self.result[current_block_name] = {}
         caption = None
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
@@ -179,7 +292,7 @@ class GetSystemInfoParser:
                 return
 
     def parse_installed_product_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = []
+        # self.result[current_block_name] = []
         windows_items = ("Microsoft Visual C++", "Security Update for Microsoft", "Update for Microsoft", "GDR ", "Service Pack ",
                          "Sql Server Customer Experience", "Office 16 Click-to-Run ", "Transact-SQL ScriptDom", "T-SQL ScriptDom",
                          "Batch Parser", "Shared Management Objects Extensions", "RsFx Driver", "Tools for Office Runtime (x64)",
@@ -212,7 +325,7 @@ class GetSystemInfoParser:
                 return
 
     def parse_process_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = []
+        # self.result[current_block_name] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
 
@@ -238,7 +351,7 @@ class GetSystemInfoParser:
                     next(txt, None)
 
     def parse_service_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = []
+        # self.result[current_block_name] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
 
@@ -276,7 +389,7 @@ class GetSystemInfoParser:
                     next(txt, None)
 
     def parse_hosts_block(self, txt, current_block_name: str):
-        self.result[current_block_name] = ""
+        # self.result[current_block_name] = ""
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
             if line.startswith("</"):
@@ -289,7 +402,7 @@ class GetSystemInfoParser:
                 self.result[current_block_name] = self.result[current_block_name] + line + "\n"
 
     def parse_open_ports(self, txt):
-        self.result["OpenPorts"] = []
+        # self.result["OpenPorts"] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
             if line.startswith("</"):
@@ -332,7 +445,7 @@ class GetSystemInfoParser:
                 continue
 
     def parse_network_agent_report(self, txt, current_block_name: str):
-        self.result[current_block_name] = ""
+        # self.result[current_block_name] = ""
         for line in txt:
             try:
                 line = line.decode("cp1251").rstrip("\r\n").strip()
@@ -349,7 +462,7 @@ class GetSystemInfoParser:
                     self.result[current_block_name] = self.result[current_block_name] + "\n" + line
 
     def parse_event_logs(self, txt, current_block_name: str):
-        self.result[current_block_name] = []
+        # self.result[current_block_name] = []
         for line in txt:
             line = line.decode("utf-8").rstrip("\r\n").strip()
             if line.startswith("</"):
@@ -489,6 +602,6 @@ class GetSystemInfoParser:
 if __name__ == "__main__":
     bigc = GetSystemInfoParser()
     reports_list = bigc.get_reports()
-    txt, net_diag, evt_kel, evt_sys, evt_app = bigc.get_information_from_gsi(reports_list[7])
+    txt, net_diag, evt_kel, evt_sys, evt_app = bigc.get_information_from_gsi(reports_list[0])
     bigc.main_reading_thread(txt, net_diag, evt_kel, evt_sys, evt_app)
     print(f"\n\n{reports_list}")
