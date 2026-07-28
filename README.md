@@ -1,8 +1,9 @@
+
 ## Kaspersky GetSystemInfo Parser
 The script is a CLI utility in a TUI format. 
 Eliminates the need to manually review a GSI5 or GSI6 report by presenting data in human-friendly form.
 
-<img width="1205" height="665" alt="image" src="https://github.com/user-attachments/assets/b6ef5abc-fb0f-45e8-8693-af3b272d291a" />
+<img width="845" height="623" alt="GetSystemInfoParserDemo" src="https://github.com/user-attachments/assets/62b24474-d43a-4508-930a-0074f333ae28" />
 
 ## What information does the GSI report provide us with?:
 
